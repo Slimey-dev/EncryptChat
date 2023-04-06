@@ -9,4 +9,7 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
+    
+    public DbSet<PublicKey> PublicKeys { get; set; }
+    public DbSet<ApiKey> ApiKeys { get; set; }
 }
