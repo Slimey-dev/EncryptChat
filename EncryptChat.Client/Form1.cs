@@ -1,36 +1,35 @@
+using EncryptChat.Client.Model;
+
 namespace EncryptChat.Client;
 
 public partial class Form1 : Form
 {
-    MenuStrip menuStrip;
-    ToolStripMenuItem accountToolStripMenuItem;
-    ToolStripMenuItem loginToolStripMenuItem;
-    ToolStripMenuItem logoutToolStripMenuItem;
-    ToolStripMenuItem roomsToolStripMenuItem;
-    ToolStripMenuItem createRoomToolStripMenuItem;
-    ToolStripMenuItem joinRoomToolStripMenuItem;
-    ToolStripMenuItem leaveRoomToolStripMenuItem;
+    private readonly ToolStripMenuItem _createRoomToolStripMenuItem;
+    private readonly ToolStripMenuItem _leaveRoomToolStripMenuItem;
+    private readonly ToolStripMenuItem _loginToolStripMenuItem;
+    private readonly ToolStripMenuItem _logoutToolStripMenuItem;
+    private readonly ToolStripMenuItem _notificationsToolStripMenuItem;
+    private readonly Button _sendButton;
 
-    RichTextBox chatBox;
-    TextBox messageBox;
-    Button sendButton;
+    public readonly RichTextBox ChatBox;
+
 
     public Form1()
     {
         InitializeComponent();
 
-        menuStrip = new MenuStrip();
-        accountToolStripMenuItem = new ToolStripMenuItem();
-        loginToolStripMenuItem = new ToolStripMenuItem();
-        logoutToolStripMenuItem = new ToolStripMenuItem();
-        roomsToolStripMenuItem = new ToolStripMenuItem();
-        createRoomToolStripMenuItem = new ToolStripMenuItem();
-        joinRoomToolStripMenuItem = new ToolStripMenuItem();
-        leaveRoomToolStripMenuItem = new ToolStripMenuItem();
+        var menuStrip = new MenuStrip();
+        var accountToolStripMenuItem = new ToolStripMenuItem();
+        var roomsToolStripMenuItem = new ToolStripMenuItem();
+        var messageBox = new TextBox();
+        _loginToolStripMenuItem = new ToolStripMenuItem();
+        _logoutToolStripMenuItem = new ToolStripMenuItem();
+        _createRoomToolStripMenuItem = new ToolStripMenuItem();
+        _leaveRoomToolStripMenuItem = new ToolStripMenuItem();
+        _notificationsToolStripMenuItem = new ToolStripMenuItem();
+        _sendButton = new Button();
 
-        chatBox = new RichTextBox();
-        messageBox = new TextBox();
-        sendButton = new Button();
+        ChatBox = new RichTextBox();
 
         //
         // menuStrip
@@ -38,15 +37,16 @@ public partial class Form1 : Form
         menuStrip.Items.AddRange(new ToolStripItem[]
         {
             accountToolStripMenuItem,
-            roomsToolStripMenuItem
+            roomsToolStripMenuItem,
+            _notificationsToolStripMenuItem
         });
         //
         // accountToolStripMenuItem
         //
         accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
         {
-            loginToolStripMenuItem,
-            logoutToolStripMenuItem
+            _loginToolStripMenuItem,
+            _logoutToolStripMenuItem
         });
         accountToolStripMenuItem.Name = "accountToolStripMenuItem";
         accountToolStripMenuItem.Size = new Size(65, 20);
@@ -54,25 +54,24 @@ public partial class Form1 : Form
         //
         // loginToolStripMenuItem
         //
-        loginToolStripMenuItem.Name = "loginToolStripMenuItem";
-        loginToolStripMenuItem.Size = new Size(180, 22);
-        loginToolStripMenuItem.Text = "Login";
-        loginToolStripMenuItem.Click += LoginToolStripMenuItem_Click;
+        _loginToolStripMenuItem.Name = "loginToolStripMenuItem";
+        _loginToolStripMenuItem.Size = new Size(180, 22);
+        _loginToolStripMenuItem.Text = "Login";
+        _loginToolStripMenuItem.Click += LoginToolStripMenuItem_Click;
         //
         // logoutToolStripMenuItem
         //
-        logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-        logoutToolStripMenuItem.Size = new Size(180, 22);
-        logoutToolStripMenuItem.Text = "Logout";
-        logoutToolStripMenuItem.Click += LogoutToolStripMenuItem_Click;
+        _logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+        _logoutToolStripMenuItem.Size = new Size(180, 22);
+        _logoutToolStripMenuItem.Text = "Logout";
+        _logoutToolStripMenuItem.Click += LogoutToolStripMenuItem_Click;
         //
         // roomsToolStripMenuItem
         //
         roomsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
         {
-            createRoomToolStripMenuItem,
-            joinRoomToolStripMenuItem,
-            leaveRoomToolStripMenuItem
+            _createRoomToolStripMenuItem,
+            _leaveRoomToolStripMenuItem
         });
         roomsToolStripMenuItem.Name = "roomsToolStripMenuItem";
         roomsToolStripMenuItem.Size = new Size(53, 20);
@@ -80,33 +79,26 @@ public partial class Form1 : Form
         //
         // createRoomToolStripMenuItem
         //
-        createRoomToolStripMenuItem.Name = "createRoomToolStripMenuItem";
-        createRoomToolStripMenuItem.Size = new Size(180, 22);
-        createRoomToolStripMenuItem.Text = "Create Room";
-        createRoomToolStripMenuItem.Click += CreateRoomToolStripMenuItem_Click;
-        //
-        // joinRoomToolStripMenuItem
-        //
-        joinRoomToolStripMenuItem.Name = "joinRoomToolStripMenuItem";
-        joinRoomToolStripMenuItem.Size = new Size(180, 22);
-        joinRoomToolStripMenuItem.Text = "Join Room";
-        joinRoomToolStripMenuItem.Click += JoinRoomToolStripMenuItem_Click;
+        _createRoomToolStripMenuItem.Name = "createRoomToolStripMenuItem";
+        _createRoomToolStripMenuItem.Size = new Size(180, 22);
+        _createRoomToolStripMenuItem.Text = "Create Room";
+        _createRoomToolStripMenuItem.Click += CreateRoomToolStripMenuItem_Click;
         //
         // leaveRoomToolStripMenuItem
         //
-        leaveRoomToolStripMenuItem.Name = "leaveRoomToolStripMenuItem";
-        leaveRoomToolStripMenuItem.Size = new Size(180, 22);
-        leaveRoomToolStripMenuItem.Text = "Leave Room";
-        leaveRoomToolStripMenuItem.Click += LeaveRoomToolStripMenuItem_Click;
+        _leaveRoomToolStripMenuItem.Name = "leaveRoomToolStripMenuItem";
+        _leaveRoomToolStripMenuItem.Size = new Size(180, 22);
+        _leaveRoomToolStripMenuItem.Text = "Leave Room";
+        _leaveRoomToolStripMenuItem.Click += LeaveRoomToolStripMenuItem_Click;
         //
         // chatBox
         //
-        chatBox.Location = new Point(12, 27);
-        chatBox.Name = "chatBox";
-        chatBox.Size = new Size(776, 411);
-        chatBox.TabIndex = 0;
-        chatBox.Text = "";
-        chatBox.ReadOnly = true;
+        ChatBox.Location = new Point(12, 27);
+        ChatBox.Name = "chatBox";
+        ChatBox.Size = new Size(776, 411);
+        ChatBox.TabIndex = 0;
+        ChatBox.Text = "";
+        ChatBox.ReadOnly = true;
         //
         // messageBox
         //
@@ -117,18 +109,25 @@ public partial class Form1 : Form
         //
         // sendButton
         //
-        sendButton.Location = new Point(12, 470);
-        sendButton.Name = "sendButton";
-        sendButton.Size = new Size(776, 23);
-        sendButton.TabIndex = 2;
-        sendButton.Text = "Send";
-        sendButton.UseVisualStyleBackColor = true;
-        sendButton.Click += SendButton_Click;
+        _sendButton.Location = new Point(12, 470);
+        _sendButton.Name = "sendButton";
+        _sendButton.Size = new Size(776, 23);
+        _sendButton.TabIndex = 2;
+        _sendButton.Text = "Send";
+        _sendButton.UseVisualStyleBackColor = true;
+        _sendButton.Click += SendButton_Click;
+        //
+        // notificationsToolStripMenuItem
+        //
+        _notificationsToolStripMenuItem.Name = "notificationsToolStripMenuItem";
+        _notificationsToolStripMenuItem.Size = new Size(180, 22);
+        _notificationsToolStripMenuItem.Text = "Notifications";
+        _notificationsToolStripMenuItem.Click += notificationsToolStripMenuItem_Click;
 
         Controls.Add(menuStrip);
-        Controls.Add(chatBox);
+        Controls.Add(ChatBox);
         Controls.Add(messageBox);
-        Controls.Add(sendButton);
+        Controls.Add(_sendButton);
 
         Text = "EncryptChat";
         ClientSize = new Size(800, 500);
@@ -137,36 +136,35 @@ public partial class Form1 : Form
         StartPosition = FormStartPosition.CenterScreen;
     }
 
+    public List<Notification> Notifications { get; set; } = new();
+
     private void LoginToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        //open loginform
-        LoginForm loginForm = new LoginForm();
+        var loginForm = new LoginForm();
         loginForm.Show();
     }
 
     private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
     {
-
     }
 
     private void CreateRoomToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        var createRoomForm = new CreateRoom();
+        createRoomForm.Show();
     }
 
-    private void JoinRoomToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-    }
-    
     private void LeaveRoomToolStripMenuItem_Click(object sender, EventArgs e)
     {
-
     }
-    
+
     private void SendButton_Click(object sender, EventArgs e)
     {
-
     }
-    
-    
 
+    private void notificationsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var notificationsForm = new NotificationsForm();
+        notificationsForm.Show();
+    }
 }
