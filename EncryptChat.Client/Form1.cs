@@ -1,4 +1,7 @@
-using EncryptChat.Client.Model;
+using System.Security.Cryptography;
+using System.Text;
+using EncryptChat.Shared.Model;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace EncryptChat.Client;
 
@@ -12,6 +15,7 @@ public partial class Form1 : Form
     private readonly Button _sendButton;
 
     public readonly RichTextBox ChatBox;
+    private HubConnection _connection;
 
 
     public Form1()
@@ -57,14 +61,14 @@ public partial class Form1 : Form
         _loginToolStripMenuItem.Name = "loginToolStripMenuItem";
         _loginToolStripMenuItem.Size = new Size(180, 22);
         _loginToolStripMenuItem.Text = "Login";
-        _loginToolStripMenuItem.Click += LoginToolStripMenuItem_Click;
+        _loginToolStripMenuItem.Click += LoginToolStripMenuItem_Click!;
         //
         // logoutToolStripMenuItem
         //
         _logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
         _logoutToolStripMenuItem.Size = new Size(180, 22);
         _logoutToolStripMenuItem.Text = "Logout";
-        _logoutToolStripMenuItem.Click += LogoutToolStripMenuItem_Click;
+        _logoutToolStripMenuItem.Click += LogoutToolStripMenuItem_Click!;
         //
         // roomsToolStripMenuItem
         //
@@ -82,14 +86,14 @@ public partial class Form1 : Form
         _createRoomToolStripMenuItem.Name = "createRoomToolStripMenuItem";
         _createRoomToolStripMenuItem.Size = new Size(180, 22);
         _createRoomToolStripMenuItem.Text = "Create Room";
-        _createRoomToolStripMenuItem.Click += CreateRoomToolStripMenuItem_Click;
+        _createRoomToolStripMenuItem.Click += CreateRoomToolStripMenuItem_Click!;
         //
         // leaveRoomToolStripMenuItem
         //
         _leaveRoomToolStripMenuItem.Name = "leaveRoomToolStripMenuItem";
         _leaveRoomToolStripMenuItem.Size = new Size(180, 22);
         _leaveRoomToolStripMenuItem.Text = "Leave Room";
-        _leaveRoomToolStripMenuItem.Click += LeaveRoomToolStripMenuItem_Click;
+        _leaveRoomToolStripMenuItem.Click += LeaveRoomToolStripMenuItem_Click!;
         //
         // chatBox
         //
@@ -115,14 +119,14 @@ public partial class Form1 : Form
         _sendButton.TabIndex = 2;
         _sendButton.Text = "Send";
         _sendButton.UseVisualStyleBackColor = true;
-        _sendButton.Click += SendButton_Click;
+        _sendButton.Click += SendButton_Click!;
         //
         // notificationsToolStripMenuItem
         //
         _notificationsToolStripMenuItem.Name = "notificationsToolStripMenuItem";
         _notificationsToolStripMenuItem.Size = new Size(180, 22);
         _notificationsToolStripMenuItem.Text = "Notifications";
-        _notificationsToolStripMenuItem.Click += notificationsToolStripMenuItem_Click;
+        _notificationsToolStripMenuItem.Click += notificationsToolStripMenuItem_Click!;
 
         Controls.Add(menuStrip);
         Controls.Add(ChatBox);
@@ -136,11 +140,58 @@ public partial class Form1 : Form
         StartPosition = FormStartPosition.CenterScreen;
     }
 
+    public sealed override string Text
+    {
+        get { return base.Text; }
+#pragma warning disable CS8765
+        set { base.Text = value ?? throw new ArgumentNullException(nameof(value)); }
+#pragma warning restore CS8765
+    }
+
     public List<Notification> Notifications { get; set; } = new();
+    public string? ApiKey { get; set; }
+
+    public string? Email { get; set; }
+
+    private void Form1_Load(object sender, EventArgs e)
+    {
+        if (File.Exists("apikey.txt"))
+        {
+            var encrypted = File.ReadAllText("apikey.txt");
+            ApiKey = ProtectedData.Unprotect(Encoding.UTF8.GetBytes(encrypted), null, DataProtectionScope.CurrentUser)
+                .ToString();
+        }
+
+        if (File.Exists("email.txt"))
+        {
+            var encrypted = File.ReadAllText("email.txt");
+            Email = ProtectedData.Unprotect(Encoding.UTF8.GetBytes(encrypted), null, DataProtectionScope.CurrentUser)
+                .ToString();
+        }
+
+        if (ApiKey != null && Email != null) Connect();
+    }
+
+    public void Connect()
+    {
+        _connection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:5001/chatHub")
+            .Build();
+
+        _connection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var msg = $"{user}: {message}";
+            ChatBox.Invoke(new MethodInvoker(delegate { ChatBox.AppendText(msg + "\n"); }));
+        });
+
+        _connection.On<Notification>("ReceiveNotification", notification => { Notifications.Add(notification); });
+
+        _connection.StartAsync();
+    }
 
     private void LoginToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        var loginForm = new LoginForm();
+        var loginForm = new LoginForm(this);
         loginForm.Show();
     }
 

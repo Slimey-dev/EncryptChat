@@ -1,4 +1,4 @@
-﻿namespace EncryptChat.Client.Model;
+﻿namespace EncryptChat.Shared.Model;
 
 public class Notification
 {

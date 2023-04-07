@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptChat.Server", "Encry
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptChat.Client", "EncryptChat.Client\EncryptChat.Client.csproj", "{21A221EC-CBE7-415A-81BA-5BB00E380E3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptChat.Shared", "EncryptChat.Shared\EncryptChat.Shared.csproj", "{0D4B0FAF-C263-4FF4-BF3D-49861BA3C264}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{21A221EC-CBE7-415A-81BA-5BB00E380E3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21A221EC-CBE7-415A-81BA-5BB00E380E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21A221EC-CBE7-415A-81BA-5BB00E380E3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D4B0FAF-C263-4FF4-BF3D-49861BA3C264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D4B0FAF-C263-4FF4-BF3D-49861BA3C264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D4B0FAF-C263-4FF4-BF3D-49861BA3C264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D4B0FAF-C263-4FF4-BF3D-49861BA3C264}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
