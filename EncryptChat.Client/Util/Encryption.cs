@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 
 namespace EncryptChat.Client.Util;
 
@@ -8,7 +7,7 @@ public class Encryption
     public static string Encrypt(string data, string key)
     {
         using var aes = Aes.Create();
-        var keyBytes = Encoding.UTF8.GetBytes(key);
+        var keyBytes = Convert.FromBase64String(key);
         aes.Key = keyBytes;
         aes.GenerateIV();
         var iv = aes.IV;
@@ -35,10 +34,16 @@ public class Encryption
         var cipher = new byte[fullCipher.Length - iv.Length];
         Buffer.BlockCopy(fullCipher, 0, iv, 0, iv.Length);
         Buffer.BlockCopy(fullCipher, iv.Length, cipher, 0, cipher.Length);
-        var decryptor = aes.CreateDecryptor(Encoding.UTF8.GetBytes(key), iv);
+        var decryptor = aes.CreateDecryptor(Convert.FromBase64String(key), iv);
         using var ms = new MemoryStream(cipher);
         using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
         using var sr = new StreamReader(cs);
         return sr.ReadToEnd();
+    }
+
+    public static string GenerateKey()
+    {
+        using var aes = Aes.Create();
+        return Convert.ToBase64String(aes.Key);
     }
 }

@@ -8,6 +8,8 @@ public partial class InviteForm : Form
     private readonly Button _declineButton;
     private readonly Label _ownerNameLabel;
 
+    private readonly Form1 _form1;
+
     private Notification _notification = null!;
 
     public InviteForm()
@@ -53,14 +55,23 @@ public partial class InviteForm : Form
         Controls.Add(_declineButton);
     }
 
+    public InviteForm(Form1 form1, Notification notification) : this()
+    {
+        _form1 = form1;
+        _notification = notification;
+        _ownerNameLabel.Text = "Owner:" + notification.OwnerName;
+    }
+
     private void AcceptButton_Click(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+        _form1.AcceptInvite(_notification);
+        Close();
     }
 
     private void DeclineButton_Click(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+        _form1.RejectInvite(_notification);
+        Close();
     }
 
     public void SetNotification(Notification notification)

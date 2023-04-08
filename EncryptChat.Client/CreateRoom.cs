@@ -3,37 +3,19 @@
 public partial class CreateRoom : Form
 {
     private readonly Button createButton;
-    private readonly Label nameLabel;
-    private readonly RichTextBox nameTextBox;
     private readonly Label participantsLabel;
     private readonly RichTextBox participantsTextBox;
+
+    private readonly Form1 _form1;
 
     public CreateRoom()
     {
         InitializeComponent();
 
-        nameLabel = new Label();
-        nameTextBox = new RichTextBox();
         createButton = new Button();
         participantsTextBox = new RichTextBox();
         participantsLabel = new Label();
 
-        //
-        // nameLabel
-        //
-        nameLabel.AutoSize = true;
-        nameLabel.Location = new Point(12, 9);
-        nameLabel.Name = "nameLabel";
-        nameLabel.Size = new Size(38, 13);
-        nameLabel.TabIndex = 0;
-        nameLabel.Text = "Name:";
-        //
-        // nameTextBox
-        //
-        nameTextBox.Location = new Point(12, 25);
-        nameTextBox.Name = "nameTextBox";
-        nameTextBox.Size = new Size(260, 20);
-        nameTextBox.TabIndex = 1;
         //
         // createButton
         //
@@ -69,13 +51,20 @@ public partial class CreateRoom : Form
         Controls.Add(participantsLabel);
         Controls.Add(participantsTextBox);
         Controls.Add(createButton);
-        Controls.Add(nameTextBox);
-        Controls.Add(nameLabel);
         Name = "CreateRoom";
         Text = "Create Room";
     }
 
+    public CreateRoom(Form1 form1) : this()
+    {
+        _form1 = form1;
+    }
+
     private void CreateButton_Click(object sender, EventArgs e)
     {
+        var participants =
+            participantsTextBox.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        _form1.CreateRoom(participants);
+        Close();
     }
 }

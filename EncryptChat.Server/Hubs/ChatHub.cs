@@ -8,14 +8,8 @@ public class ChatHub : Hub
 {
     private static readonly ConnectionMapping<string> _connections = new();
 
-    public async Task SendNotification(string target, string roomId, string owner, string encryptedSymmetricKey)
+    public async Task SendNotification(string target, Notification notification)
     {
-        var notification = new Notification
-        {
-            RoomId = Guid.Parse(roomId),
-            OwnerName = owner,
-            EncryptedSymmetricKey = encryptedSymmetricKey
-        };
         if (_connections.GetConnections(target).Any())
             await Clients.Client(_connections.GetConnections(target).First())
                 .SendAsync("ReceiveNotification", notification);
@@ -38,7 +32,8 @@ public class ChatHub : Hub
 
     public override Task OnConnectedAsync()
     {
-        if (Context.Items.TryGetValue("email", out var email)) _connections.Add(email.ToString(), Context.ConnectionId);
+        if (Context.GetHttpContext()!.Request.Headers.TryGetValue("email", out var email))
+            _connections.Add(email.ToString(), Context.ConnectionId);
         return base.OnConnectedAsync();
     }
 }
